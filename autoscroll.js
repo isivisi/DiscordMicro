@@ -11,6 +11,7 @@ function pageScroll() {
     if (scrollTouched) {
         delayTime = 500;
         allowedScroll = (document.body.scrollHeight - window.pageYOffset < window.innerHeight);
+        console.log("Autoscroll enabled:", allowedScroll);
         scrollTouched = false;
     }
 
@@ -21,5 +22,7 @@ document.onscroll = function() {
     console.log("scroll override");
     scrollTouched = true;
 }
+
+pageScroll();
 
 module.exports = {}
