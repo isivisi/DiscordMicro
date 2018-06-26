@@ -4,6 +4,10 @@
 
 
 var Discord = require('discord.js');
+var path = require('path');
+
+// Local files
+var autoscroll = require(path.resolve( __dirname, 'autoscroll.js'));
 
 console.log("Starting up discord service");
 
@@ -46,33 +50,22 @@ client.on('ready', () => {
 
 });
 
+client.on('error', error => {
+    appendChat(message);
+});
+
 client.on('message', msg => {
     printChatMessage(msg);
 });
 
-var allowedScroll = true;
-var scrollTouched = false;
-function pageScroll() { 
-    var delayTime = 10;
+// input
+document.getElementById('input').addEventListener('input', function() {
 
-    if (allowedScroll) {
-        window.scrollBy(0,50);
-    }
-    
-    if (scrollTouched) {
-        delayTime = 500;
-        allowedScroll = (document.body.scrollHeight - window.pageYOffset < window.innerHeight);
-        scrollTouched = false;
-    }
+});
 
-    scrolldelay = setTimeout(pageScroll,delayTime);
-}
-
-document.onscroll = function() {
-    console.log("scroll override");
-    scrollTouched = true;
-}
-
-pageScroll(1000);
-
-client.login("MTM2NjY2Mzk4NzQyMDIwMDk2.CetUMQ.HptJRX2QBe4CHkUiW7zwxnL0fvo");
+client.login("MTM2NjY2Mzk4NzQyMDIwMDk2.CetUMQ.HptJRX2QBe4CHkUiW7zwxnL0fvo").then(function() {
+    console.log("Good!");
+}, 
+function(error) {
+    appendChat(error.message);
+});
