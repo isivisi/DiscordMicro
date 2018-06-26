@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>DiscordMicro</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
+  </head>
+
+  <style>
+
+    .titleBar {
+      -webkit-user-select: none;
+      -webkit-app-region: drag;
+
+      width:100%;
+      height: 50px;
+      background-color:#23272a;
+      position: fixed;
+      top:0;
+      left:0;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      padding:3px;
+      background-color:#2c2f33;
+      color: 	#ffffff;
+      margin-top:50px;
+    }
+
+    #chat {
+      margin-bottom: 50px;
+      font-size: 12px;
+      font-style:oblique;
+    }
+
+    #input {
+      position:fixed;
+      bottom:0;
+      left:0;
+      /*width:calc(100% - 3px);*/
+      width: 100%;
+      height: 25px;
+      background-color: #56585B;
+    }
+
+    ::-webkit-scrollbar { display: none; }
+  
+  </style>
+
+  <div class="titleBar"></div>
+
+  <body>
+      <h1>DiscordMicro</h1>
+      <div style="font-size:8px;">version  0.0.0</div>
+      ______________________________
+    
+    <div id="chat">
+
+    </div>
+
+    <input type="text" id="input" >
+
+    
+    <script>
+      // You can also require other files to run in this process
+      require('./renderer.js')
+    </script>
+  </body>
+</html>
