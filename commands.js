@@ -1,3 +1,4 @@
+var remote = require('electron').remote;
 
 // describe commands
 
@@ -71,13 +72,7 @@ function setToken(client, settings, args) {
     if (args.length > 0) {
         settings.token = args[0];
 
-        client.login(settings.token).then(function() {
-            console.log("Good!");
-            return('Authentication successful');
-        }, 
-        function(error) {
-            return(error.message);
-        });
+        remote.getCurrentWindow().reload();
 
         return 'Auth token set';
     }

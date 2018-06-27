@@ -66,6 +66,12 @@ client.on('ready', () => {
     appendChat("Authenticated as " + client.user.username)
     appendChat(" ");
 
+    if (settings.selectedServer && settings.selectedChannel) {
+        var server = client.guilds.get(settings.selectedServer);
+        var channel = server.channels.get(settings.selectedChannel);
+        appendChat('Listening on <<span class="guildInfo">' + server.name + '</span>.<span class="channelInfo">' + channel.name + '</span>>')
+    }
+
     /*client.guilds.array().forEach(function(server, i) {
         server.channels.array().forEach(function(channel, i) {
             if (['dm', 'group', 'text'].includes(channel.type)) {
@@ -158,8 +164,12 @@ input.addEventListener('keydown', function(event) {
             var args = input.value.match(/\s[^\s]*/g); // get all arguments
 
             var commandInfo = commands.find(function(a,b) { return a.name.includes(inputCommand); });
-
-            args.map(arg => arg.replace(/\s/g,'')); // remove all whitespaces from individual args
+            
+            // remove all whitespaces from individual args
+            for (var i = 0; i < args.length; i++) {
+                args[i] = args[i].replace(/\s/g,''); 
+            }
+            //args.map(arg => arg.replace(/\s/g,'')); 
             
             console.log(inputCommand, args, commandInfo);
             var returnString = commandInfo.function(client, settings, args);
