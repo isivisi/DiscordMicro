@@ -1,22 +1,28 @@
 {
-  "name": "electron-quick-start",
+  "name": "DiscordMicro",
   "version": "1.0.0",
   "description": "A minimal Electron application",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "build": {
+    "appId": "electron.micro",
+    "mac": {
+      "category": "discord.micro.chat"
+    }
+  },
+  "repository": "https://github.com/isivisi/DiscordMicro",
   "keywords": [
     "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "Discord"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "isivisi",
+  "license": "",
   "devDependencies": {
-    "discord.js": "^11.3.0"
+    "discord.js": "^11.3.0",
+    "fs-jetpack": "^1.3.0"
   }
 }
