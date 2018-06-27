@@ -13,6 +13,7 @@ var window = remote.getCurrentWindow();
 // Local files
 var autoscroll = require(path.resolve( __dirname, 'autoscroll.js'));
 var commands = require(path.resolve( __dirname, 'commands.js'));
+var helpers = require(path.resolve( __dirname, 'helperfunctions.js'));
 
 
 // settings for now
@@ -23,30 +24,13 @@ var settings = {
 }
 var settingsFileName = 'discordMicroSettings.json';
 
-// Append something to the screen
-function appendChat(text) {
-    var html = document.getElementById("chat").innerHTML;
-
-    document.getElementById("chat").innerHTML = html + "<p>" + text + "</p>";
-}
-
 // load settings
 if (jetpack.exists(settingsFileName)) {
     var settings = jetpack.read(settingsFileName, 'json');
-    appendChat('loading previous state');
+    helpers.appendChat('loading previous state');
 } else {
     jetpack.write(settingsFileName, settings);
-    appendChat('settings file generated <br> set your auth token using /token');
-}
-
-function parseEmotes(str) {
-    return str.replace(/<:([^\s.]*):([0-9]*)>/g, '<img src="https://cdn.discordapp.com/emojis/$2.png" height="18" width="18">');
-}
-
-function printChatMessage(msg) {
-    console.log(msg.cleanContent);
-    var name = (msg.member.nickname) ? msg.member.nickname : msg.author.username;
-    appendChat('<span class="guildInfo">' + msg.channel.guild.name + '</span>.<span class="channelInfo">' + msg.channel.name + '</span> <span style="color: ' + msg.member.displayHexColor + ';">' + name + '</span>: ' + parseEmotes(msg.cleanContent));
+    helpers.appendChat('settings file generated <br> set your auth token using /token');
 }
 
 function getActiveChannel() {
@@ -63,38 +47,31 @@ var client = new Discord.Client();
 //guild.channels.array()
 
 client.on('ready', () => {
-    appendChat("Authenticated as " + client.user.username)
-    appendChat(" ");
+    helpers.appendChat("Authenticated as " + client.user.username)
+    helpers.appendChat(" ");
 
     if (settings.selectedServer && settings.selectedChannel) {
         var server = client.guilds.get(settings.selectedServer);
         var channel = server.channels.get(settings.selectedChannel);
-        appendChat('Listening on <<span class="guildInfo">' + server.name + '</span>.<span class="channelInfo">' + channel.name + '</span>>')
-    }
 
-    /*client.guilds.array().forEach(function(server, i) {
-        server.channels.array().forEach(function(channel, i) {
-            if (['dm', 'group', 'text'].includes(channel.type)) {
-                channel.fetchMessages({ limit: 1 }).then(messages => {
-                    //Array.prototype.reverse.call(messages);
-                    messages.forEach(function(message) {
-                        printChatMessage(message);
-                    });
-                });
-            }
-        });
-    });*/
+        helpers.getRecentMessages(channel);
+        window.scrollBy(0,document.body.scrollHeight);
+    } else {
+        
+        helpers.appendChat("Type /server to switch server.")
+        helpers.appendChat("Type /channel to switch channels.")
+    }
 
 });
 
 client.on('error', error => {
-    appendChat(message);
+    helpers.appendChat(message);
 });
 
 client.on('message', msg => {
 
     if (msg.type == 'DEFAULT' && msg.channel.guild.id == settings.selectedServer && msg.channel.id == settings.selectedChannel) {
-        printChatMessage(msg);
+        helpers.printChatMessage(msg);
 
         // Window flash
         if (!window.isFocused()) {
@@ -165,15 +142,19 @@ input.addEventListener('keydown', function(event) {
 
             var commandInfo = commands.find(function(a,b) { return a.name.includes(inputCommand); });
             
-            // remove all whitespaces from individual args
-            for (var i = 0; i < args.length; i++) {
-                args[i] = args[i].replace(/\s/g,''); 
+            if (args) {
+                // remove all whitespaces from individual args
+                for (var i = 0; i < args.length; i++) {
+                    args[i] = args[i].replace(/\s/g,''); 
+                }
+            } else {
+                args = []
             }
             //args.map(arg => arg.replace(/\s/g,'')); 
             
             console.log(inputCommand, args, commandInfo);
             var returnString = commandInfo.function(client, settings, args);
-            appendChat(returnString);
+            helpers.appendChat(returnString);
             
             if (commandInfo.saveSettings) {
                 // save settings
@@ -206,8 +187,8 @@ if (settings.token) {
         console.log("Good!");
     }, 
     function(error) {
-        appendChat(error.message);
+        helpers.appendChat(error.message);
     });
 } else {
-    appendChat('Use /token to authenticate with discord.')
+    helpers.appendChat('Use /token to authenticate with discord.')
 }

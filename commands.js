@@ -1,5 +1,6 @@
 var remote = require('electron').remote;
-
+var path = require('path');
+var helpers = require(path.resolve( __dirname, 'helperfunctions.js'));
 // describe commands
 
 // /client
@@ -34,6 +35,7 @@ function setChannel(client, settings, args) {
     if (args.length > 0) {
         if (settings.selectedServer) {
             settings.selectedChannel = client.guilds.get(settings.selectedServer).channels.array()[parseInt(args[0])].id;
+            helpers.getRecentMessages(client.guilds.get(settings.selectedServer).channels.get(settings.selectedChannel));
             return 'channel selected.';
         } else {
             return 'No server selected';
@@ -79,6 +81,18 @@ function setToken(client, settings, args) {
     return 'No token provided.'
 }
 
+function exitProgram(client, settings, args) {
+    remote.getCurrentWindow().close();
+}
+
+function debugCmd(client, settings, args) {
+    remote.getCurrentWindow().toggleDevTools();
+}
+
+function refreshCmd(client, settings, args) {
+    remote.getCurrentWindow().reload();
+}
+
 module.exports = commandList = [
     {
         'name': 'token',
@@ -105,7 +119,21 @@ module.exports = commandList = [
         'name': 'quit',
         'usage': '/quit',
         'infoFunction': function() {return {'html':''}},
-        'function': null,
+        'function': exitProgram,
         'saveSettings': false
-    }
+    },
+    {
+        'name': 'debug',
+        'usage': '/debug',
+        'infoFunction': function() {return {'html':''}},
+        'function': debugCmd,
+        'saveSettings': false
+    },
+    {
+        'name': 'refresh',
+        'usage': '/refresh',
+        'infoFunction': function() {return {'html':''}},
+        'function': refreshCmd,
+        'saveSettings': false
+    },
 ]
