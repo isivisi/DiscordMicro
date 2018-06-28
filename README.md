@@ -1,7 +1,11 @@
 # DiscordMicro
 
-**A micro version of the popular chat application discord.**
+![Micro](https://i.imgur.com/3LX3sqx.png) 
 
-WIP
-![WIP](https://i.imgur.com/OZMfEd0.png)
+For those who want a minimal discord experience.
 
+Early WIP
+
+### So far
+- Custom server emotes
+- Image attachements
